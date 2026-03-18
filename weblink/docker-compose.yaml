@@ -1,0 +1,21 @@
+services:
+  weblink:
+    image: ${WEBLINK_IMAGE:-ghcr.io/yuna-celisse/weblink:edge}
+    pull_policy: always
+    ports:
+      - "8080:80"
+      - "443:443"
+    environment:
+      - ENABLE_SSL=${ENABLE_SSL:-false}
+    volumes:
+      - ./docker/ssl:/etc/nginx/ssl
+    depends_on:
+      - ws-server
+
+  ws-server:
+    build:
+      context: https://github.com/99percentpeople/weblink-ws-server.git
+    environment:
+      - LOG_LEVEL=info
+    ports:
+      - "9000:9000"

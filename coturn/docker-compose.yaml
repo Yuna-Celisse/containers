@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  coturn:
+    image: coturn/coturn:latest
+    container_name: coturn-server
+    restart: always
+    privileged: true
+    ports:
+      - "3478:3478/tcp"
+      - "3478:3478/udp"
+    command: >
+      turnserver
+      -a
+      --no-tls
+      --no-dtls
+      --no-stun
+      -u nbtca:nwdc
+      -r myrealm
+      -v
+      -f
+      -L 0.0.0.0
+      -p 3478
+      --pidfile /var/tmp/turnserver.pid
+      --cli-password 123456
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
